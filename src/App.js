@@ -1,21 +1,47 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import { getNewsArticles } from './services/fashion-united.graphql.services';
 import './App.css';
 
+const DEFAULT_IMAGE =
+    'https://fashionunited.info/global-assets/img/default/fu-default_1200x630_black-favicon.jpg';
+
+
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = { newsArticles: [] };
+    }
+
+    async componentWillMount() {
+        const variables = {
+            keywords: ['hunkemoller']
+        };
+
+        const result = await getNewsArticles(variables);
+
+        this.setState({
+            newsArticles: result.fashionunitedNlNewsArticles,
+        });
+    }
+    newsArticles() {
+        return this.state.newsArticles.map((newsArticle, index) =>
+            <div key={index}>
+                <h2>{newsArticle.title}</h2>
+                <img src={newsArticle.imageUrl || DEFAULT_IMAGE} />
+                <div>{newsArticle.description} <a href={newsArticle.url}>Read more</a></div>
+            </div>
+        )
+    }
+    render() {
+        return (
+            <div className="App">
+                <h1>Fashion News</h1>
+                <div>
+                    {this.newsArticles()}
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;
