@@ -9,12 +9,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Slide from '@material-ui/core/Slide';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import { getNewsArticles } from '../../services/fashion-united.graphql.services';
 import './style.css';
 
@@ -28,12 +22,6 @@ const styles = theme => ({
     root: {
         padding: 16
     },
-    dialogGrid: {
-        justifyContent: 'space-between',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%'
-    },
     card: {
         height: '100%',
         minHeight: 360,
@@ -44,29 +32,14 @@ const styles = theme => ({
     buttons: {
         marginTop: 32,
         marginBottom: 32
-    },
-    imgArea: {
-        position: 'relative',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        height: 180
-    },
-    appBar: {
-        position: 'relative'
     }
 });
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
 class Home extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            newsArticles: [],
-            open: false,
-            selectedItem: null
+            newsArticles: []
         };
     }
 
@@ -87,29 +60,16 @@ class Home extends React.PureComponent {
     }
 
     handleClickOpen = item => {
-        this.props.history.push(`/${this.slugify(item.title)}-${item.id}`);
-        this.setState({
-            open: true,
-            selectedItem: item
+        this.props.history.push({
+            pathname: `/detail/${this.slugify(item.title)}-${item.id}`,
+            state: {
+                open: true,
+                selectedItem: item
+            }
         });
     };
 
-    handleClose = () => {
-        this.setState({
-            open: false,
-            selectedItem: null
-        });
-    };
-
-    getBackgroundUrl(url){
-        if(url){
-            return 'url(' + url + ')';
-        }
-        return 'url(' + DEFAULT_IMAGE + ')';
-    }
-
-    slugify(text)
-    {
+    slugify(text){
         return text.toString().toLowerCase()
             .replace(/\s+/g, '-')           // Replace spaces with -
             .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
@@ -147,45 +107,7 @@ class Home extends React.PureComponent {
             </Grid>
         )
     }
-    loadDialog(){
-        const { classes } = this.props;
-        const { selectedItem } = this.state;
-        if(this.state.open === true && this.state.selectedItem){
-            return (
-                <Dialog
-                    fullScreen
-                    open={this.state.open}
-                    onClose={this.handleClose}
-                    TransitionComponent={Transition}
-                >
-                    <AppBar className={classes.appBar}>
-                        <Toolbar>
-                            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                                <CloseIcon />
-                            </IconButton>
-                        </Toolbar>
-                    </AppBar>
-
-                    <Grid className={classes.dialogGrid}>
-                        <div className={classes.imgArea} style={{ backgroundImage: this.getBackgroundUrl(selectedItem.imageUrl)}}>
-                        </div>
-                        <div>
-                            <Typography align="center" gutterBottom variant="headline" component="h2">
-                                {selectedItem.title}
-                            </Typography>
-                            <Typography component="p">
-                                {selectedItem.description}
-                            </Typography>
-                        </div>
-                    </Grid>
-                </Dialog>
-            )
-        }else{
-            return;
-        }
-    }
     render() {
-
         const { classes } = this.props;
         return (
             <div className="App">
@@ -200,7 +122,6 @@ class Home extends React.PureComponent {
                         Load More
                     </Button>
                 </Grid>
-                {this.loadDialog()}
             </div>
         )
     }
