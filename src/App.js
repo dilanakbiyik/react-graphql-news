@@ -23,7 +23,8 @@ const styles = theme => ({
         padding: 16
     },
     card: {
-        height: 360,
+        height: '100%',
+        minHeight: 360,
         justifyContent: 'space-between',
         display: 'flex',
         flexDirection: 'column'
@@ -57,7 +58,7 @@ class App extends Component {
     newsArticles() {
         const { classes } = this.props;
         return this.state.newsArticles.map((newsArticle, index) =>
-            <Grid key={index} item xs={3}>
+            <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
                 <Card className={classes.card}>
                     <CardActionArea>
                         <CardMedia
