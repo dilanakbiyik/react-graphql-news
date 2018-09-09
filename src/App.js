@@ -27,6 +27,10 @@ const styles = theme => ({
         justifyContent: 'space-between',
         display: 'flex',
         flexDirection: 'column'
+    },
+    buttons: {
+        marginTop: 32,
+        marginBottom: 32
     }
 });
 
@@ -80,6 +84,7 @@ class App extends Component {
         )
     }
     render() {
+        const { classes } = this.props;
         return (
             <div className="App">
                 <Typography variant="display3" gutterBottom>
@@ -87,6 +92,11 @@ class App extends Component {
                 </Typography>
                 <Grid container justify="center" spacing={16} wrap="wrap">
                     {this.newsArticles()}
+                </Grid>
+                <Grid container justify="center" className={classes.buttons}>
+                    <Button variant="contained" color="primary">
+                        Load More
+                    </Button>
                 </Grid>
             </div>
         );
