@@ -12,5 +12,11 @@ const query = `
 `;
 
 export function getNewsArticles(variables = {}) {
-    return request(endpoint, query, variables);
+    return request(endpoint, query, variables)
+        .then((response) => {
+            return response;
+        })
+        .catch((err) => {
+            return err;
+        });
 }
